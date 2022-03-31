@@ -1,18 +1,23 @@
 version: '3'
 services:
   server:
-    image: node:lts-slim
+    build:
+      context: api
+      dockerfile: ../Dockerfile
     volumes:
       - ./api:/src
+      - /src/node_modules
     working_dir: /src
-    command: ['npm', 'start']
     ports:
-      - 3001:3001
+      - 127.0.0.1:3001:3001
+
   client:
-    image: node:lts-slim
+    build:
+      context: client
+      dockerfile: ../Dockerfile
     volumes:
       - ./client:/src
+      - /src/node_modules
     working_dir: /src
-    command: ['npm', 'start']
     ports:
-      - 3000:3000
+      - 127.0.0.1:3000:3000
