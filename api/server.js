@@ -22,3 +22,5 @@ app.use('/api', apiRouter)
 app.listen(port, () =>
   console.log(`Express server is running on localhost:${port}`)
 )
+
+export default app;
