@@ -47,9 +47,6 @@ jobs:
     container:
       image: cypress/base:14.19.0
       options: --user 1001
-    defaults:
-      run:
-        working-directory: ./client
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -69,7 +66,8 @@ jobs:
           path: ~/.cache/Cypress
           key: cypress-cache-${{ runner.os }}-${{ hashFiles('client/package-lock.json') }}
 
-      - run: npm ci --prefer-offline
+      - run: npm --prefix api ci --prefer-offline
+      - run: npm --prefix client ci --prefer-offline
 
       - name: Run Cypress tests
         env:
