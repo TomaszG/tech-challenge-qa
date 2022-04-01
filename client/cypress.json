@@ -3,5 +3,6 @@
   "reporter": "junit",
   "reporterOptions": {
     "mochaFile": "test_results/junit-[hash].xml"
-  }
+  },
+  "video": false
 }

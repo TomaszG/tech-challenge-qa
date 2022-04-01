@@ -35,11 +35,12 @@ jobs:
       - run: npm ci --prefer-offline
       - run: npm run test
 
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+      - name: Upload API tests results
+        uses: actions/upload-artifact@v3
         if: always()
         with:
-          files: "api/test_results/*.xml"
+          name: api-test-results
+          path: api/test_results
 
   ui-test:
     runs-on: ubuntu-latest
@@ -81,7 +82,7 @@ jobs:
           command: npm --prefix client run cypress:run
 
       - name: Upload Cypress artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cypress-results
@@ -89,8 +90,25 @@ jobs:
             client/cypress/screenshots
             client/cypress/videos
 
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+      - name: Upload UI tests results
+        uses: actions/upload-artifact@v3
         if: always()
         with:
-          files: "client/test_results/*.xml"
+          name: ui-test-results
+          path: ui/test_results
+
+  publish-test-results:
+    needs: [api-test, ui-test]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Publish tests results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          files: "artifacts/**/*.xml"
+          check_name: "Tests Results"
