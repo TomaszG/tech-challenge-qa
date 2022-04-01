@@ -28,6 +28,9 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           cache: "npm"
+          cache-dependency-path: |
+            api/package-lock.json
+            client/package-lock.json
 
       - run: npm ci --prefer-offline
       - run: npm run test
@@ -49,6 +52,9 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           cache: "npm"
+          cache-dependency-path: |
+            api/package-lock.json
+            client/package-lock.json
 
       - name: Restore Cypress Cache
         uses: actions/cache@v3
