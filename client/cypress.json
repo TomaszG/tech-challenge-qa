@@ -1,4 +1,7 @@
 {
   "baseUrl": "http://localhost:3000",
-  "reporter": "mochawesome"
+  "reporter": "junit",
+  "reporterOptions": {
+    "mochaFile": "test_results/junit-[hash].xml"
+  }
 }

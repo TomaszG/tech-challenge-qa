@@ -35,6 +35,12 @@ jobs:
       - run: npm ci --prefer-offline
       - run: npm run test
 
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: "api/test_results/*.xml"
+
   ui-test:
     runs-on: ubuntu-latest
     container:
@@ -82,3 +88,9 @@ jobs:
           path: |
             client/cypress/screenshots
             client/cypress/videos
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: "client/test_results/*.xml"
