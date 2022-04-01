@@ -93,7 +93,7 @@ jobs:
         if: always()
         with:
           name: ui-test-results
-          path: ui/test_results
+          path: client/test_results
 
   publish-test-results:
     needs: [api-test, ui-test]
