@@ -1,0 +1,78 @@
+name: Tech Challenge QA
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+# cancel outdated jobs
+concurrency:
+  group: ${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - run: npm ci --prefer-offline
+      - run: npm run test
+
+  ui-test:
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/base:14.19.0
+      options: --user 1001
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Restore Cypress Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-cache-${{ runner.os }}-${{ hashFiles('client/package-lock.json') }}
+
+      - run: npm ci --prefer-offline
+
+      - name: Run Cypress tests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: cypress-io/github-action@v2
+        with:
+          install: false
+          start: npm --prefix api start, npm --prefix client start
+          wait-on: "http://localhost:3000"
+          command: npm --prefix client run cypress:run
+
+      - name: Upload Cypress artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-results
+          path: |
+            client/cypress/screenshots
+            client/cypress/videos
