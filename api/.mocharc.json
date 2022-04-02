@@ -1,0 +1,7 @@
+{
+  "node-option": ["experimental-specifier-resolution=node"],
+  "spec": ["test/**/*.test.js"],
+  "exit": true,
+  "reporter": "mocha-multi-reporters",
+  "reporter-option": ["configFile=mocha-multiple-reporters.json"]
+}

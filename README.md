@@ -45,8 +45,8 @@ The API is a simple Express app, that uses dependency injection to make it easy 
 Before getting started you will need Docker, Docker Compose and Node on your system.
 
 - Clone this repo to your local machine
-- Go to the `client` directory and run `npm install`
-- Go to the `api` directory and run `npm install`
-- Go to the root directory and run `docker-compose up`
+- Run `docker-compose up` to start the app
+- Run `docker-compose down` to shutdown the app
+- Run `docker-compose up --build --force-recreate` to rebuild the app and reinstall dependencies
 
 This starts both the client and the server with automatic reloading when saving.
